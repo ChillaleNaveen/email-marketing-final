@@ -356,7 +356,6 @@ def query_groq_for_email(prompt):
 
 def generate_email_variations(company_name, product_name, offer_details, campaign_type, target_audience=""):
     """Generate email variations using Groq AI"""
-    # Remove the complex prompt formatting, simplify for Groq
     prompt = f"""Create TWO different marketing email variations for A/B testing:
 
 Company: {company_name}
@@ -373,7 +372,7 @@ Requirements:
 - Clear call-to-action with trackable links
 - Optimized for mobile reading
 
-Format response as:
+IMPORTANT: Provide ONLY the email content in the exact format below. Do not include any explanations, analysis, or commentary after the variations.
 
 VARIATION A:
 SUBJECT: [subject line]
@@ -381,11 +380,13 @@ BODY: [email content]
 
 VARIATION B:
 SUBJECT: [subject line]
-BODY: [email content]"""
+BODY: [email content]
+
+END"""
 
     result = query_groq_for_email(prompt)
 
-    # Enhanced error check (same logic, different API name)
+    # Enhanced error check
     if (
         'error' in result
         or not isinstance(result, list)
@@ -842,7 +843,7 @@ def track_click(tracking_id):
             conn.close()
 
 def parse_email_variations(generated_text):
-    """Parse generated text into variation objects"""
+    """Parse generated text into variation objects with better filtering"""
     variations = []
 
     # Split by VARIATION markers
@@ -856,17 +857,46 @@ def parse_email_variations(generated_text):
         subject = ""
         body_lines = []
         body_started = False
+        
+        # Stop words/phrases that indicate end of email content
+        stop_phrases = [
+            "these two variations",
+            "variation a uses",
+            "variation b uses", 
+            "variation a creates",
+            "variation b creates",
+            "both variations",
+            "the first variation",
+            "the second variation",
+            "this approach",
+            "psychological triggers",
+            "different approaches",
+            "analysis:",
+            "explanation:",
+            "note:",
+            "summary:",
+            "comparison:",
+            "strategy:"
+        ]
 
         for line in lines:
             line = line.strip()
+            
+            # Check if this line contains stop phrases (case insensitive)
+            line_lower = line.lower()
+            should_stop = any(phrase in line_lower for phrase in stop_phrases)
+            
+            if should_stop:
+                break  # Stop processing lines when we hit explanatory content
+                
             if line.upper().startswith('SUBJECT:'):
                 subject = line[8:].strip()
             elif line.upper().startswith('BODY:'):
                 body_started = True
-            elif body_started: # Any non-empty line after BODY: is part of the body
+            elif body_started and line:  # Only add non-empty lines after BODY:
                 body_lines.append(line)
 
-        body = '\n'.join(body_lines).strip() # .strip() removes leading/trailing whitespace
+        body = '\n'.join(body_lines).strip()
 
         if subject and body:
             variations.append({
