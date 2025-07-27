@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Technology Summit 2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset and base styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            background-color: #f5f7fa;
+            color: #1a1a1a;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .conference-card {
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            margin: 0 0 15px 0;
+            letter-spacing: -1px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .highlight-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 25px;
+            border-radius: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .highlight-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .highlight-card h3 {
+            color: #2563eb;
+            margin-top: 0;
+        }
+
+        .tracks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .track {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .track:hover {
+            border-color: #2563eb;
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.1);
+        }
+
+        .speakers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .speaker {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .speaker:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .speaker img {
+            width: 120px;
+            height: 120px;
+            border-radius: 60px;
+            margin-bottom: 15px;
+            object-fit: cover;
+        }
+
+        .register-section {
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: white;
+            color: #2563eb;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .button:hover {
+            background: transparent;
+            color: white;
+            border-color: white;
+        }
+
+        .schedule {
+            margin: 40px 0;
+        }
+
+        .day {
+            margin-bottom: 30px;
+        }
+
+        .session {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+        }
+
+        .session:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .time {
+            font-weight: 600;
+            color: #2563eb;
+        }
+
+        .footer {
+            background-color: #f8fafc;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+            color: #64748b;
+        }
+
+        /* Responsive design */
+        @media only screen and (max-width: 768px) {
+            .container {
+                margin: 20px auto;
+            }
+            
+            .header {
+                padding: 40px 20px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .session {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="conference-card">
+            <div class="header">
+                <h1>Global Technology Summit 2025</h1>
+                <p>Shaping the Future of Technology: Innovation, Integration, Impact</p>
+            </div>
+            
+            <div class="content">
+                <div class="highlights">
+                    <div class="highlight-card">
+                        <h3>3 Days</h3>
+                        <p>Of intensive learning, networking, and innovation</p>
+                    </div>
+                    <div class="highlight-card">
+                        <h3>50+ Speakers</h3>
+                        <p>Industry leaders and innovators</p>
+                    </div>
+                    <div class="highlight-card">
+                        <h3>1000+ Attendees</h3>
+                        <p>Global technology professionals</p>
+                    </div>
+                </div>
+
+                <h2>Conference Tracks</h2>
+                <div class="tracks">
+                    <div class="track">
+                        <h3>Artificial Intelligence</h3>
+                        <p>Latest developments in AI and machine learning</p>
+                    </div>
+                    <div class="track">
+                        <h3>Cloud Computing</h3>
+                        <p>Next-generation cloud solutions</p>
+                    </div>
+                    <div class="track">
+                        <h3>Cybersecurity</h3>
+                        <p>Advanced security strategies</p>
+                    </div>
+                </div>
+
+                <h2>Featured Speakers</h2>
+                <div class="speakers">
+                    <div class="speaker">
+                        <img src="https://i.pravatar.cc/150?img=1" alt="Speaker 1">
+                        <h3>Dr. Emma Chen</h3>
+                        <p>AI Research Director</p>
+                    </div>
+                    <div class="speaker">
+                        <img src="https://i.pravatar.cc/150?img=2" alt="Speaker 2">
+                        <h3>John Smith</h3>
+                        <p>Cloud Architecture Expert</p>
+                    </div>
+                    <div class="speaker">
+                        <img src="https://i.pravatar.cc/150?img=3" alt="Speaker 3">
+                        <h3>Sarah Johnson</h3>
+                        <p>Cybersecurity Specialist</p>
+                    </div>
+                </div>
+
+                <h2>Conference Schedule</h2>
+                <div class="schedule">
+                    <div class="day">
+                        <h3>Day 1 - October 15</h3>
+                        <div class="session">
+                            <div class="time">9:00 AM</div>
+                            <div class="detail">
+                                <h4>Opening Keynote</h4>
+                                <p>The Future of Technology - Dr. Emma Chen</p>
+                            </div>
+                        </div>
+                        <div class="session">
+                            <div class="time">11:00 AM</div>
+                            <div class="detail">
+                                <h4>AI Track Sessions</h4>
+                                <p>Multiple parallel sessions</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="day">
+                        <h3>Day 2 - October 16</h3>
+                        <div class="session">
+                            <div class="time">9:00 AM</div>
+                            <div class="detail">
+                                <h4>Cloud Computing Keynote</h4>
+                                <p>Next-Gen Cloud Solutions - John Smith</p>
+                            </div>
+                        </div>
+                        <div class="session">
+                            <div class="time">2:00 PM</div>
+                            <div class="detail">
+                                <h4>Workshop Sessions</h4>
+                                <p>Hands-on learning experiences</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="register-section">
+                    <h2>Join Us at the Summit</h2>
+                    <p>Early bird registration ends August 31, 2025</p>
+                    <a href="#register" class="button">Register Now</a>
+                </div>
+
+                <div class="venue-info">
+                    <h2>Venue Information</h2>
+                    <p><strong>Location:</strong> Tech Convention Center</p>
+                    <p><strong>Address:</strong> 123 Innovation Boulevard, Silicon Valley, CA 94025</p>
+                    <p><strong>Accommodation:</strong> Special rates available at partner hotels</p>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <p>© 2025 Global Technology Summit. All rights reserved.</p>
+                <p>Contact: conference@techsummit.com | +1 (555) 123-4567</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add animation to elements
+            const elements = document.querySelectorAll('.highlight-card, .track, .speaker, .session');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            elements.forEach(element => {
+                observer.observe(element);
+            });
+
+            // Smooth scroll for buttons
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

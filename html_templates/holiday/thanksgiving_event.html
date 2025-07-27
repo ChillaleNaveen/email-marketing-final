@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanksgiving Event</title>
+    <link href="https://fonts.googleapis.com/css2?family=Charm:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #B85C38;
+            --secondary-color: #E2703A;
+            --accent-color: #FCA652;
+            --background-color: #FFF3E4;
+            --text-color: #46231C;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(184, 92, 56, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(252, 166, 82, 0.1) 0%, transparent 50%);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        .falling-leaves {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(184, 92, 56, 0.1);
+            border: 2px solid var(--primary-color);
+        }
+
+        h1 {
+            font-family: 'Charm', cursive;
+            font-size: 3.5em;
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(184, 92, 56, 0.2);
+        }
+
+        .thanksgiving-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .content-card {
+            background: var(--background-color);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid var(--primary-color);
+        }
+
+        .content-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(184, 92, 56, 0.2);
+        }
+
+        .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .menu-section {
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .menu-item {
+            background: rgba(255, 243, 228, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover {
+            transform: scale(1.05);
+            background: rgba(255, 243, 228, 1);
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            border: 2px solid transparent;
+        }
+
+        .button:hover {
+            background: transparent;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .leaf {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--primary-color);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            animation: falling linear infinite;
+        }
+
+        @keyframes falling {
+            0% {
+                transform: translate(0, -10vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(20vw, 100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px auto;
+            }
+
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="falling-leaves" id="leaves"></div>
+    <div class="container">
+        <div class="card">
+            <h1>Thanksgiving Gathering</h1>
+            
+            <div class="thanksgiving-content">
+                <div class="content-card">
+                    <div class="icon">🦃</div>
+                    <h3>Traditional Feast</h3>
+                    <p>Join us for a sumptuous Thanksgiving dinner with all the classics</p>
+                </div>
+                <div class="content-card">
+                    <div class="icon">🍁</div>
+                    <h3>Gratitude Circle</h3>
+                    <p>Share your blessings in our annual gratitude ceremony</p>
+                </div>
+                <div class="content-card">
+                    <div class="icon">🏈</div>
+                    <h3>Family Activities</h3>
+                    <p>Football viewing, board games, and more family fun</p>
+                </div>
+            </div>
+
+            <div class="menu-section">
+                <h2>Our Feast Menu</h2>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <h4>Roast Turkey</h4>
+                        <p>Herb-butter basted</p>
+                    </div>
+                    <div class="menu-item">
+                        <h4>Cranberry Sauce</h4>
+                        <p>Homemade classic</p>
+                    </div>
+                    <div class="menu-item">
+                        <h4>Mashed Potatoes</h4>
+                        <p>Creamy & buttery</p>
+                    </div>
+                    <div class="menu-item">
+                        <h4>Pumpkin Pie</h4>
+                        <p>With whipped cream</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <p>Thursday, November 27, 2025</p>
+                <p>3:00 PM - 9:00 PM</p>
+                <p>123 Gratitude Lane, Harvest Valley</p>
+                <a href="#rsvp" class="button">Join Our Celebration</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createLeaf() {
+            const leaf = document.createElement('div');
+            leaf.className = 'leaf';
+            leaf.style.left = Math.random() * window.innerWidth + 'px';
+            leaf.style.animationDuration = Math.random() * 3 + 2 + 's';
+            leaf.style.opacity = Math.random() * 0.5 + 0.5;
+            leaf.style.transform = `scale(${Math.random() * 0.5 + 0.5})`;
+            
+            const colors = ['#B85C38', '#E2703A', '#FCA652'];
+            leaf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            document.getElementById('leaves').appendChild(leaf);
+
+            leaf.addEventListener('animationend', () => {
+                leaf.remove();
+            });
+        }
+
+        function addFallingLeaves() {
+            setInterval(createLeaf, 300);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            addFallingLeaves();
+        });
+    </script>
+</body>
+</html>

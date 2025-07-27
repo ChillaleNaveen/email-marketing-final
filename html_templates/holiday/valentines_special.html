@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Special</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FF1493;
+            --secondary-color: #FF69B4;
+            --accent-color: #FFB6C1;
+            --background-color: #FFF0F5;
+            --text-color: #4A4A4A;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(255, 20, 147, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 105, 180, 0.1) 0%, transparent 50%);
+        }
+
+        .hearts-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(255, 20, 147, 0.1);
+            border: 2px solid var(--primary-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 182, 193, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4em;
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .special-offers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+            position: relative;
+        }
+
+        .offer-card {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .offer-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-color);
+            box-shadow: 0 10px 20px rgba(255, 20, 147, 0.2);
+        }
+
+        .offer-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                rgba(255, 20, 147, 0.1), 
+                rgba(255, 105, 180, 0.1));
+            transform: translateX(-100%);
+            transition: 0.5s ease;
+        }
+
+        .offer-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        .special-moments {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .moment-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .moment-item:hover {
+            transform: translateX(10px);
+            background: rgba(255, 182, 193, 0.1);
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 20, 147, 0.3);
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            animation: floatHeart 4s ease-in-out infinite;
+            opacity: 0;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px auto;
+            }
+
+            h1 {
+                font-size: 3em;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts-bg" id="hearts"></div>
+    <div class="container">
+        <div class="card">
+            <h1>Valentine's Day Special</h1>
+            
+            <div class="special-offers">
+                <div class="offer-card">
+                    <div class="icon">💝</div>
+                    <h3>Romantic Dinner</h3>
+                    <p>4-course gourmet meal for two</p>
+                    <p class="price">$99 per couple</p>
+                </div>
+                <div class="offer-card">
+                    <div class="icon">💑</div>
+                    <h3>Couple's Spa</h3>
+                    <p>Luxurious spa treatment package</p>
+                    <p class="price">$149 per couple</p>
+                </div>
+                <div class="offer-card">
+                    <div class="icon">🌹</div>
+                    <h3>Gift Bundle</h3>
+                    <p>Premium Valentine's gift collection</p>
+                    <p class="price">From $79</p>
+                </div>
+            </div>
+
+            <div class="special-moments">
+                <h2>Valentine's Day Schedule</h2>
+                <div class="moment-item">
+                    <div class="time">6:00 PM</div>
+                    <div class="detail">Welcome Champagne Reception</div>
+                </div>
+                <div class="moment-item">
+                    <div class="time">7:00 PM</div>
+                    <div class="detail">Gourmet Dinner Service</div>
+                </div>
+                <div class="moment-item">
+                    <div class="time">8:30 PM</div>
+                    <div class="detail">Live Music & Dancing</div>
+                </div>
+                <div class="moment-item">
+                    <div class="time">10:00 PM</div>
+                    <div class="detail">Dessert & Wine Pairing</div>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <p>February 14, 2025</p>
+                <p>6:00 PM - 11:00 PM</p>
+                <p>Grand Romance Hotel</p>
+                <a href="#reserve" class="button">Reserve Now</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * window.innerWidth + 'px';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+            
+            document.getElementById('hearts').appendChild(heart);
+
+            heart.addEventListener('animationend', () => {
+                heart.remove();
+            });
+        }
+
+        function addFloatingHearts() {
+            setInterval(createHeart, 300);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            addFloatingHearts();
+        });
+
+        // Add hover effect sound
+        const buttons = document.querySelectorAll('.button');
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', () => {
+                const audio = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAAFbgBtbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1t//////////////////////////////////////////////////////////////////8AAAAATGF2YzU4LjU0AAAAAAAAAAAAAAAAJAAAAAAAAAAAAQVuiZi6AAAAAAAAAAAAAAAAAAAAAP/7kGQAAANUMEEFPeAEKYYX+JmksQ8YwQUR94AQlhhg4GaQoAAAAAgADhhPIEOCDggQ5P4IBBBD7qJBv/OSCf1ggEHkgg8vkH35BBBBB/5/RB44IMIABBBBAMQQcMQOCBwQIcHQQQQQQQQQQQQQQQQQBAEAQBAMQQBAEAQBAEAQBAMQQBAEAQBAEAQBAMQQBAEAQBAEAQBAMQQBAEAQBAEAQBCEIQhCEIQhCEIQhCEIAAAABkYkznAAAIAAAAAgCAIZGXOcAAAgAAAAGRiTO8AQBCEIQhCEAAABAEAQBAEAQBAEAQBAEAQBAEAQBAEAQBAEAQBAAQ');
+                audio.play();
+            });
+        });
+    </script>
+</body>
+</html>

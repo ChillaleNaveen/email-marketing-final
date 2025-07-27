@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holiday Gift Guide</title>
+    <style>
+        /* Reset styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .content {
+            padding: 30px 20px;
+        }
+        
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            margin: 20px 0;
+            transition: transform 0.2s;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-radius: 0 0 8px 8px;
+            color: #6b7280;
+            font-size: 0.9em;
+        }
+
+        .highlight {
+            background: #fef3c7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        /* Category-specific styles */
+        .black_friday { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; }
+        .newsletter { background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); }
+        .promotional { background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); }
+        .feedback { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+        .survey { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .quizzes { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .sales { background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); }
+        .seasonal { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); }
+        .announcement { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); }
+        
+        /* Responsive design */
+        @media only screen and (max-width: 600px) {
+            .container {
+                width: 100%;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header seasonal">
+            <h1>Holiday Gift Guide</h1>
+        </div>
+        
+        <div class="content">
+            
+            <h2>Welcome!</h2>
+            <p>Thank you for being a valued customer.</p>
+            <p>We have some exciting news to share with you.</p>
+            <a href="#" class="button">Learn More</a>
+        
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 Your Company Name. All rights reserved.</p>
+            <p>
+                <a href="#" style="color: #6b7280; text-decoration: underline;">Unsubscribe</a> | 
+                <a href="#" style="color: #6b7280; text-decoration: underline;">Privacy Policy</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Add interactivity if needed
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add any necessary JavaScript functionality
+            const buttons = document.querySelectorAll('.button');
+            buttons.forEach(button => {
+                button.addEventListener('mouseover', () => {
+                    button.style.transform = 'translateY(-2px)';
+                });
+                button.addEventListener('mouseout', () => {
+                    button.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

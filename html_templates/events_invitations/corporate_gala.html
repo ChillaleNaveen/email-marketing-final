@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corporate Gala Night</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        :root {
+            --primary: #1E293B;
+            --secondary: #0F172A;
+            --accent: #C6A55C;
+            --background: #F8FAFC;
+            --text: #334155;
+            --gold: linear-gradient(135deg, #C6A55C 0%, #DFC08F 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            font-family: 'Cormorant Garamond', serif;
+            line-height: 1.6;
+        }
+
+        .invitation-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 40px;
+            background: white;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .border-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid var(--accent);
+            margin: 20px;
+            border-radius: 15px;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .gala-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .gala-header::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 3px;
+            background: var(--gold);
+            margin: 20px auto;
+        }
+
+        .event-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        .event-subtitle {
+            font-size: 1.5rem;
+            color: var(--accent);
+            font-weight: 500;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin: 60px 0;
+        }
+
+        .detail-card {
+            text-align: center;
+            padding: 30px;
+            background: rgba(198, 165, 92, 0.05);
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .detail-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .detail-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .detail-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .detail-text {
+            font-size: 1.2rem;
+            color: var(--text);
+        }
+
+        .rsvp-section {
+            text-align: center;
+            margin-top: 60px;
+            padding: 40px;
+            background: var(--gold);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .rsvp-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .rsvp-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: white;
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 30px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rsvp-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .rsvp-button:hover::before {
+            left: 100%;
+        }
+
+        .rsvp-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .dress-code {
+            margin-top: 40px;
+            text-align: center;
+            font-style: italic;
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        .footer-ornament {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--accent);
+            font-size: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .invitation-container {
+                margin: 20px;
+                padding: 20px;
+            }
+
+            .event-title {
+                font-size: 2.5rem;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="invitation-container">
+        <div class="border-pattern"></div>
+        
+        <header class="gala-header animate__animated animate__fadeIn">
+            <div class="event-subtitle">You Are Cordially Invited To</div>
+            <h1 class="event-title">Annual Corporate Gala</h1>
+            <p>Join us for an evening of elegance and celebration</p>
+        </header>
+
+        <div class="details-grid">
+            <div class="detail-card animate-on-scroll">
+                <div class="detail-icon">📅</div>
+                <h3 class="detail-title">Date & Time</h3>
+                <p class="detail-text">Saturday, December 15th, 2025<br>7:00 PM Onwards</p>
+            </div>
+
+            <div class="detail-card animate-on-scroll">
+                <div class="detail-icon">📍</div>
+                <h3 class="detail-title">Venue</h3>
+                <p class="detail-text">The Grand Ballroom<br>Luxury Hotel & Resort</p>
+            </div>
+
+            <div class="detail-card animate-on-scroll">
+                <div class="detail-icon">🎵</div>
+                <h3 class="detail-title">Entertainment</h3>
+                <p class="detail-text">Live Orchestra<br>Special Performances</p>
+            </div>
+        </div>
+
+        <div class="rsvp-section animate-on-scroll">
+            <h2 class="rsvp-title">Please RSVP by November 30th</h2>
+            <p>Join us for an unforgettable evening of celebration and networking</p>
+            <a href="#" class="rsvp-button">RSVP Now</a>
+        </div>
+
+        <div class="dress-code animate-on-scroll">
+            Dress Code: Black Tie
+        </div>
+
+        <div class="footer-ornament">❦</div>
+    </div>
+
+    <script>
+        function handleIntersection(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }
+
+        const observer = new IntersectionObserver(handleIntersection, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const animatedElements = document.querySelectorAll('.animate-on-scroll');
+            animatedElements.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>

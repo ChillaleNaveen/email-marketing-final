@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Year Celebration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FFD700;
+            --secondary-color: #000;
+            --accent-color: #FF4D4D;
+            --text-color: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
+            min-height: 100vh;
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        .fireworks-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 50px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4em;
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .countdown-section {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .countdown-box {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            min-width: 100px;
+            text-align: center;
+            border: 2px solid var(--primary-color);
+        }
+
+        .countdown-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .countdown-label {
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .events {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .event-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .event-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-color);
+        }
+
+        .event-time {
+            color: var(--primary-color);
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: var(--primary-color);
+            color: var(--secondary-color);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.5); }
+        }
+
+        .firework {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            animation: explode 1s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(30);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px auto;
+                padding: 10px;
+            }
+
+            .card {
+                padding: 30px;
+            }
+
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .countdown-section {
+                flex-wrap: wrap;
+            }
+
+            .countdown-box {
+                min-width: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fireworks-container" id="fireworks"></div>
+    <div class="container">
+        <div class="card">
+            <h1>New Year 2026</h1>
+            <div class="countdown-section" id="countdown">
+                <div class="countdown-box">
+                    <div class="countdown-number" id="days">00</div>
+                    <div class="countdown-label">Days</div>
+                </div>
+                <div class="countdown-box">
+                    <div class="countdown-number" id="hours">00</div>
+                    <div class="countdown-label">Hours</div>
+                </div>
+                <div class="countdown-box">
+                    <div class="countdown-number" id="minutes">00</div>
+                    <div class="countdown-label">Minutes</div>
+                </div>
+                <div class="countdown-box">
+                    <div class="countdown-number" id="seconds">00</div>
+                    <div class="countdown-label">Seconds</div>
+                </div>
+            </div>
+
+            <div class="events">
+                <div class="event-card">
+                    <h3>Gala Dinner</h3>
+                    <div class="event-time">8:00 PM - 10:00 PM</div>
+                    <p>Welcome 2026 with an exquisite dining experience</p>
+                </div>
+                <div class="event-card">
+                    <h3>Countdown Party</h3>
+                    <div class="event-time">10:00 PM - 12:30 AM</div>
+                    <p>Live music, entertainment & champagne toast</p>
+                </div>
+                <div class="event-card">
+                    <h3>After Party</h3>
+                    <div class="event-time">12:30 AM - 3:00 AM</div>
+                    <p>Continue the celebration with DJ & dancing</p>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="#reserve" class="button">Reserve Your Spot</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateCountdown() {
+            const newYear = new Date('January 1, 2026 00:00:00').getTime();
+            const now = new Date().getTime();
+            const difference = newYear - now;
+
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = String(days).padStart(2, '0');
+            document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+        }
+
+        function createFirework(x, y) {
+            const colors = ['#FFD700', '#FF4D4D', '#4DFF4D', '#4D4DFF', '#FF4DFF'];
+            const particles = 12;
+            
+            for (let i = 0; i < particles; i++) {
+                const firework = document.createElement('div');
+                firework.className = 'firework';
+                firework.style.left = x + 'px';
+                firework.style.top = y + 'px';
+                firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                firework.style.transform = `rotate(${(360 / particles) * i}deg)`;
+                
+                document.getElementById('fireworks').appendChild(firework);
+                
+                setTimeout(() => {
+                    firework.remove();
+                }, 1000);
+            }
+        }
+
+        function randomFireworks() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            
+            createFirework(
+                Math.random() * width,
+                Math.random() * height * 0.7
+            );
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+            setInterval(randomFireworks, 2000);
+        });
+    </script>
+</body>
+</html>

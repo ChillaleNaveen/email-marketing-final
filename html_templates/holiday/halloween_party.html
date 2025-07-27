@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halloween Party</title>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FF6B1A;
+            --secondary-color: #6B1AFF;
+            --accent-color: #1AFF6B;
+            --background-color: #1A1A1A;
+            --text-color: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: var(--background-color);
+            min-height: 100vh;
+            color: var(--text-color);
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(107, 26, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 107, 26, 0.2) 0%, transparent 50%);
+        }
+
+        .spooky-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.5;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .card {
+            background: rgba(26, 26, 26, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(255, 107, 26, 0.2);
+            border: 2px solid var(--primary-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-family: 'Creepster', cursive;
+            font-size: 4em;
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            text-shadow: 3px 3px 0 var(--secondary-color);
+            animation: creepy 3s ease-in-out infinite;
+        }
+
+        .party-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .info-card {
+            background: rgba(255, 107, 26, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid var(--primary-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card:hover {
+            transform: translateY(-10px) rotate(2deg);
+            box-shadow: 0 10px 20px rgba(255, 107, 26, 0.3);
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 107, 26, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: 0.5s;
+        }
+
+        .info-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: var(--primary-color);
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button:hover {
+            background: transparent;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: scale(1.05);
+        }
+
+        .ghost {
+            position: absolute;
+            font-size: 40px;
+            animation: ghost 15s linear infinite;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        @keyframes creepy {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes ghost {
+            0% {
+                transform: translateX(-100%) translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.5;
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateX(100vw) translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .cobweb {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.1) 45%, rgba(255,255,255,0.1) 55%, transparent 55%);
+            transform: rotate(45deg);
+        }
+
+        .cobweb.top-left { top: 0; left: 0; }
+        .cobweb.top-right { top: 0; right: 0; transform: rotate(135deg); }
+        .cobweb.bottom-left { bottom: 0; left: 0; transform: rotate(-45deg); }
+        .cobweb.bottom-right { bottom: 0; right: 0; transform: rotate(225deg); }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px auto;
+            }
+
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="spooky-bg" id="spooky-bg"></div>
+    <div class="container">
+        <div class="card">
+            <div class="cobweb top-left"></div>
+            <div class="cobweb top-right"></div>
+            <div class="cobweb bottom-left"></div>
+            <div class="cobweb bottom-right"></div>
+            
+            <h1>Halloween Spooktacular</h1>
+            
+            <div class="party-info">
+                <div class="info-card">
+                    <div class="icon">🎃</div>
+                    <h3>Costume Contest</h3>
+                    <p>Win amazing prizes for the best costume!</p>
+                    <p>Grand Prize: $500</p>
+                </div>
+                <div class="info-card">
+                    <div class="icon">👻</div>
+                    <h3>Haunted House</h3>
+                    <p>Dare to enter our terrifying haunted mansion</p>
+                </div>
+                <div class="info-card">
+                    <div class="icon">🧙‍♀️</div>
+                    <h3>Witch's Brew</h3>
+                    <p>Spooky cocktails and themed refreshments</p>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <h2>October 31st, 2025</h2>
+                <p>8:00 PM - Midnight</p>
+                <p>123 Haunted Lane, Spookytown</p>
+                <a href="#rsvp" class="button">Join If You Dare</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createGhost() {
+            const ghost = document.createElement('div');
+            ghost.className = 'ghost';
+            ghost.innerHTML = '👻';
+            ghost.style.top = Math.random() * window.innerHeight + 'px';
+            document.getElementById('spooky-bg').appendChild(ghost);
+
+            ghost.addEventListener('animationend', () => {
+                ghost.remove();
+            });
+        }
+
+        function addSpookyElements() {
+            setInterval(createGhost, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            addSpookyElements();
+        });
+
+        // Add hover sound effect to buttons
+        const buttons = document.querySelectorAll('.button');
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', () => {
+                const audio = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAAFbgBtbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1t//////////////////////////////////////////////////////////////////8AAAAATGF2YzU4LjU0AAAAAAAAAAAAAAAAJAAAAAAAAAAAAQVuiZi6AAAAAAAAAAAAAAAAAAAAAP/7kGQAAANUMEEFPeAEKYYX+JmksQ8YwQUR94AQlhhg4GaQoAAAAAgADhhPIEOCDggQ5P4IBBBD7qJBv/OSCf1ggEHkgg8vkH35BBBBB/5/RB44IMIABBBBAMQQcMQOCBwQIcHQQQQQQQQQQQQQQQQBAEAQBAMQQBAEAQBAEAQBAMQQBAEAQBAEAQBAMQQBAEAQBAEAQBAMQQBAEAQBAEAQBCEIQhCEIQhCEIQhCEIAAAABkYkznAAAIAAAAAgCAIZGXOcAAAgAAAAGRiTO8AQBCEIQhCEAAABAEAQBAEAQBAEAQBAEAQBAEAQBAEAQBAEAQBAAQ');
+                audio.play();
+            });
+        });
+    </script>
+</body>
+</html>
