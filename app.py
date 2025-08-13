@@ -45,6 +45,7 @@ print(f"Application will use BASE_URL: {BASE_URL}")
 # --- Database Configuration (PostgreSQL) ---
 # Render provides DATABASE_URL for PostgreSQL services
 DATABASE_URL = os.environ.get("DATABASE_URL")
+print(f"[DEBUG] DATABASE_URL at runtime: {DATABASE_URL}")
 
 GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 
