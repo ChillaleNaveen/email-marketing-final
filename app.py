@@ -450,6 +450,31 @@ P.S. Join hundreds of satisfied customers who've already made the switch. 🌟''
     }
 
     return [{"generated_text": f"VARIATION A:\nSUBJECT: {variation_a['subject']}\nBODY: {variation_a['body']}\n\nVARIATION B:\nSUBJECT: {variation_b['subject']}\nBODY: {variation_b['body']}"}]
+def parse_email_variations(generated_text):
+    """
+    Parse the AI-generated email text into structured variations.
+    Expects the format:
+    VARIATION A:
+    SUBJECT: ...
+    BODY: ...
+
+    VARIATION B:
+    SUBJECT: ...
+    BODY: ...
+    """
+    variations = []
+    pattern = r'VARIATION\s+([A-Z]):\s*SUBJECT:\s*(.*?)\s*BODY:\s*(.*?)(?=(?:VARIATION\s+[A-Z]:|END|$))'
+    
+    matches = re.findall(pattern, generated_text, re.DOTALL | re.IGNORECASE)
+    
+    for var, subject, body in matches:
+        variations.append({
+            "variation_name": f"Variation_{var.upper()}",
+            "subject": subject.strip(),
+            "body": body.strip()
+        })
+    
+    return variations
 
 # API Routes
 @app.route('/')
@@ -990,7 +1015,7 @@ TEMPLATE_HTML:
 """
 
     payload = {
-        "model": "llama3-70b-8192",
+        "model": "llama-3.1-70b-versatile",
         "messages": [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": prompt}
