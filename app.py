@@ -1015,7 +1015,7 @@ TEMPLATE_HTML:
 """
 
     payload = {
-        "model": "llama-3.1-70b-versatile",
+        "model": "llama-3.2-11b-text-preview",
         "messages": [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": prompt}
