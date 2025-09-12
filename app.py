@@ -296,7 +296,7 @@ def query_groq_for_email(prompt):
     
     # Updated to use a supported model
     payload = {
-        "model": "llama-3.1-70b-versatile",  # Updated model
+        "model": "llama-3.3-70b-versatile",
         "messages": [
             {"role": "system", "content": "You are an expert email marketing copywriter. Create two completely different marketing email variations for A/B testing."},
             {"role": "user", "content": prompt}
@@ -698,7 +698,7 @@ TEMPLATE_HTML:
 """
 
     payload = {
-        "model": "llama-3.1-70b-versatile",  # Updated model
+        "model": "llama-3.3-70b-versatile",  # Updated model
         "messages": [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": prompt}
