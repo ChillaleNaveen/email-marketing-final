@@ -334,7 +334,7 @@ def query_groq_for_email(prompt):
     }
     
     payload = {
-        "model": "llama3-70b-8192", # <-- 1. USE THE CORRECT, HIGH-QUALITY MODEL
+        "model": "llama-3.3-70b-versatile", # <-- 1. USE THE CORRECT, HIGH-QUALITY MODEL
         "messages": [
             # 2. A much stronger prompt that demands JSON
             {"role": "system", "content": """You are an expert marketing copywriter and A/B testing specialist.
@@ -1048,7 +1048,7 @@ HTML_TEMPLATE:
 """
 
     payload = {
-        "model": "llama3-70b-8192", # <-- FIX 1: Use the correct model
+        "model": "llama-3.3-70b-versatile", # <-- FIX 1: Use the correct model
         "messages": [
             # FIX 2: A very strong, specific system prompt
             {"role": "system", "content": """You are an expert HTML email developer.
