@@ -318,21 +318,28 @@ def calculate_ab_metrics(campaign_id):
     conn.close()
     return metrics
 
-# Original email generation functions (keeping existing code)
+
+
 def query_groq_for_email(prompt):
     """Query Groq API for email generation"""
+    
+    # Use the correct API key for this function
+    if not GROQ_EMAIL_API_KEY:
+        print("Error: GROQ_EMAIL_API_KEY not set.")
+        return {"error": "GROQ_EMAIL_API_KEY not set in environment"}
+        
     headers = {
         "Authorization": f"Bearer {GROQ_EMAIL_API_KEY}",
         "Content-Type": "application/json"
     }
     
     payload = {
-        "model": "llama3-70b-8192", # <-- FIX 1: Use the correct model
+        "model": "llama3-70b-8192", # <-- 1. USE THE CORRECT, HIGH-QUALITY MODEL
         "messages": [
-            # FIX 2: A much stronger, more direct system prompt
+            # 2. A much stronger prompt that demands JSON
             {"role": "system", "content": """You are an expert marketing copywriter and A/B testing specialist.
 Your task is to generate two distinct email variations (A and B) based on user requirements.
-You MUST provide your response in the a valid JSON format.
+You MUST provide your response in a valid JSON format.
 You must not include any commentary, explanations, or text outside of the JSON structure.
 
 The JSON structure MUST be:
@@ -348,25 +355,25 @@ The JSON structure MUST be:
 }"""},
             {"role": "user", "content": prompt}
         ],
-        "temperature": 0.8, # Increased temperature slightly for more creative difference
-        "max_tokens": 2000, # Increased token limit
-        "response_format": {"type": "json_object"} # <-- FIX 3: Force JSON output
+        "temperature": 0.8,
+        "max_tokens": 2000,
+        "response_format": {"type": "json_object"} # <-- 3. FORCE THE AI TO RESPOND WITH JSON
     }
 
     try:
         response = requests.post("https://api.groq.com/openai/v1/chat/completions", 
                                headers=headers, json=payload, timeout=60)
-        
-        response.raise_for_status() # This will raise an error for 4xx/5xx responses
+
+        response.raise_for_status() # Raise an error for bad responses (4xx or 5xx)
 
         result = response.json()
         
         # The AI's entire response is the JSON string
-        json_content = result['choices'][0]['message']['content']
+        json_content_string = result['choices'][0]['message']['content']
         
         # Parse the JSON string into a Python dict
-        parsed_json = json.loads(json_content)
-        return parsed_json # Return the dictionary directly
+        parsed_json_dict = json.loads(json_content_string)
+        return parsed_json_dict # Return the dictionary directly
 
     except json.JSONDecodeError as e:
         print(f"Error decoding JSON from Groq: {e}")
@@ -374,12 +381,13 @@ The JSON structure MUST be:
         return {"error": f"Failed to parse AI response as JSON."}
     except requests.exceptions.HTTPError as e:
          print(f"HTTP Error: {e.response.status_code} {e.response.text}")
-         return {"error": f"API request failed: {e.response.status_code}"}
+         return {"error": f"API request failed: {e.response.status_code} - {e.response.text}"}
     except requests.exceptions.RequestException as e:
         return {"error": f"Request failed: {str(e)}"}
     except Exception as e:
         print(f"An unexpected error occurred in query_groq_for_email: {e}")
         return {"error": f"An unexpected error occurred: {str(e)}"}
+    
 
 def generate_email_variations(company_name, product_name, offer_details, campaign_type, target_audience=""):
     """Generate email variations using Groq AI"""
@@ -394,30 +402,30 @@ Type: {campaign_type}
 Audience: {target_audience if target_audience else "General customers"}
 
 Requirements:
-- Subject line: Under 50 characters, A/B test friendly.
+- Subject line: Under 50-60 characters.
 - Email body: Professional, persuasive, conversion-focused.
-- Different psychological triggers for each variation.
-- Clear call-to-action (e.g., [Link Text]).
+- Use different psychological triggers for each variation (e.g., scarcity vs. social proof).
+- Include a clear call-to-action placeholder like [Link Text].
 """
 
     # This now returns a dictionary, not a list
-    result = query_groq_for_email(prompt)
+    result_dict = query_groq_for_email(prompt)
 
-    if 'error' in result:
-        print(f"Groq API Error: {result['error']}. Generating fallback variations.")
+    if 'error' in result_dict:
+        print(f"Groq API Error: {result_dict['error']}. Generating fallback variations.")
         # Your fallback logic should match the new JSON structure
         return {
             "variation_a": {
                 "subject": f"🚀 {product_name} - Limited Time",
-                "body": "Hi there,\n\nBig news! {offer_details}\n\n[Claim Your Spot Now]"
+                "body": f"Hi there,\n\nBig news! {offer_details}\n\n[Claim Your Spot Now]"
             },
             "variation_b": {
                 "subject": f"You're invited: {product_name}",
-                "body": "Hello!\n\nWe have {offer_details} to share with you.\n\n[Discover More]"
+                "body": f"Hello!\n\nWe have {offer_details} to share with you.\n\n[Discover More]"
             }
         }
 
-    return result
+    return result_dict
 
 def create_fallback_variations(company_name, product_name, offer_details, campaign_type):
     """Create fallback variations optimized for A/B testing"""
@@ -512,12 +520,21 @@ def ab_dashboard():
 def create_campaign():
     try:
         data = request.get_json()
-        # ... (your existing validation code) ...
-        
-        # Join the list into a string for the AI prompt and for DB storage
-        campaign_type_str = ", ".join(data.get('campaign_type', []))
 
+        # ... (keep your existing validation logic) ...
+        required_fields = ['company_name', 'product_name', 'offer_details', 'campaign_type']
+        if not all(field in data and data[field] for field in required_fields):
+            return jsonify({'success': False, 'error': 'Missing required fields'})
+        
+        campaign_types = data.get('campaign_type', [])
+        if not isinstance(campaign_types, list) or not campaign_types:
+             return jsonify({'success': False, 'error': 'Campaign Type must be a non-empty list.'})
+
+        # Join the list into a string for the AI prompt and for DB storage
+        campaign_type_str = ", ".join(campaign_types)
+        
         # Generate email variations
+        # This function now returns a dict: {"variation_a": {...}, "variation_b": {...}}
         result_dict = generate_email_variations(
             data['company_name'], data['product_name'],
             data['offer_details'], campaign_type_str,
@@ -527,7 +544,7 @@ def create_campaign():
         if 'error' in result_dict:
             return jsonify({'success': False, 'error': result_dict['error']})
 
-        # No more parsing! We already have the data.
+        # NO MORE PARSING! We already have the structured data.
         variations = [
             {
                 "variation_name": "Variation_A",
@@ -541,23 +558,24 @@ def create_campaign():
             }
         ]
 
-        # ... (rest of your database insertion code) ...
-        # Make sure your INSERT loop uses these 'variations'
-        
+        # Create campaign in database
         conn = get_db_connection()
         cursor = conn.cursor()
+
         campaign_id = str(uuid.uuid4())
-        # ... (your campaign INSERT) ...
+        
+        campaign_name_type = campaign_types[0].title() if len(campaign_types) == 1 else "Multi-Type"
+
         cursor.execute(sql.SQL('''
             INSERT INTO campaigns (id, name, company_name, product_name, offer_details, campaign_type, target_audience)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
         '''), (
             campaign_id,
-            f"{data['company_name']} - {data['product_name']}",
+            f"{data['company_name']} - {campaign_name_type}", # Adjusted name
             data['company_name'],
             data['product_name'],
             data['offer_details'],
-            campaign_type_str,
+            campaign_type_str,  # Store the comma-separated string
             data.get('target_audience', '')
         ))
 
@@ -579,7 +597,7 @@ def create_campaign():
         return jsonify({
             'success': True,
             'campaign_id': campaign_id,
-            'variations': variations # Send back the structured data
+            'variations': variations
         })
 
     except Exception as e:
