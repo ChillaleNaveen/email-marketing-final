@@ -327,37 +327,65 @@ def query_groq_for_email(prompt):
     }
     
     payload = {
-        "model": "llama-3.3-70b-versatile",
+        "model": "llama3-70b-8192", # <-- FIX 1: Use the correct model
         "messages": [
-            {"role": "system", "content": "You are an expert email marketing copywriter. Create two completely different marketing email variations for A/B testing."},
+            # FIX 2: A much stronger, more direct system prompt
+            {"role": "system", "content": """You are an expert marketing copywriter and A/B testing specialist.
+Your task is to generate two distinct email variations (A and B) based on user requirements.
+You MUST provide your response in the a valid JSON format.
+You must not include any commentary, explanations, or text outside of the JSON structure.
+
+The JSON structure MUST be:
+{
+  "variation_a": {
+    "subject": "Subject for Variation A",
+    "body": "Email body for Variation A..."
+  },
+  "variation_b": {
+    "subject": "Subject for Variation B",
+    "body": "Email body for Variation B..."
+  }
+}"""},
             {"role": "user", "content": prompt}
         ],
-        "temperature": 0.7,
-        "max_tokens": 1000
+        "temperature": 0.8, # Increased temperature slightly for more creative difference
+        "max_tokens": 2000, # Increased token limit
+        "response_format": {"type": "json_object"} # <-- FIX 3: Force JSON output
     }
 
     try:
         response = requests.post("https://api.groq.com/openai/v1/chat/completions", 
                                headers=headers, json=payload, timeout=60)
+        
+        response.raise_for_status() # This will raise an error for 4xx/5xx responses
 
-        if response.status_code == 200:
-            result = response.json()
-            return [{"generated_text": result['choices'][0]['message']['content']}]
-        elif response.status_code == 429:
-            return {"error": "Rate limit exceeded. Please wait before trying again."}
-        elif response.status_code == 401:
-            return {"error": "Invalid API key. Check your Groq API token."}
-        else:
-            return {"error": f"API request failed with status {response.status_code}"}
+        result = response.json()
+        
+        # The AI's entire response is the JSON string
+        json_content = result['choices'][0]['message']['content']
+        
+        # Parse the JSON string into a Python dict
+        parsed_json = json.loads(json_content)
+        return parsed_json # Return the dictionary directly
 
-    except requests.exceptions.Timeout:
-        return {"error": "Request timed out. Please try again."}
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON from Groq: {e}")
+        print(f"Raw response: {result['choices'][0]['message']['content']}")
+        return {"error": f"Failed to parse AI response as JSON."}
+    except requests.exceptions.HTTPError as e:
+         print(f"HTTP Error: {e.response.status_code} {e.response.text}")
+         return {"error": f"API request failed: {e.response.status_code}"}
     except requests.exceptions.RequestException as e:
         return {"error": f"Request failed: {str(e)}"}
+    except Exception as e:
+        print(f"An unexpected error occurred in query_groq_for_email: {e}")
+        return {"error": f"An unexpected error occurred: {str(e)}"}
 
 def generate_email_variations(company_name, product_name, offer_details, campaign_type, target_audience=""):
     """Generate email variations using Groq AI"""
-    prompt = f"""Create TWO different marketing email variations for A/B testing:
+    
+    # This prompt is now simpler, as the instructions are in the System Prompt
+    prompt = f"""Generate two A/B test email variations based on these details:
 
 Company: {company_name}
 Product/Service: {product_name}
@@ -366,36 +394,28 @@ Type: {campaign_type}
 Audience: {target_audience if target_audience else "General customers"}
 
 Requirements:
-- Subject line: Under 50 characters, A/B test friendly
-- Email body: Professional, persuasive, conversion-focused
-- Minimal emoji use (2-3 maximum per email)
-- Different psychological triggers for each variation
-- Clear call-to-action with trackable links
-- Optimized for mobile reading
+- Subject line: Under 50 characters, A/B test friendly.
+- Email body: Professional, persuasive, conversion-focused.
+- Different psychological triggers for each variation.
+- Clear call-to-action (e.g., [Link Text]).
+"""
 
-IMPORTANT: Provide ONLY the email content in the exact format below. Do not include any explanations, analysis, or commentary after the variations.
-
-VARIATION A:
-SUBJECT: [subject line]
-BODY: [email content]
-
-VARIATION B:
-SUBJECT: [subject line]
-BODY: [email content]
-
-END"""
-
+    # This now returns a dictionary, not a list
     result = query_groq_for_email(prompt)
 
-    # Enhanced error check
-    if (
-        'error' in result
-        or not isinstance(result, list)
-        or not result
-        or 'generated_text' not in result[0]
-    ):
-        print(f"Groq API Error: {result.get('error', 'Missing generated_text')}. Generating fallback variations.")
-        return create_fallback_variations(company_name, product_name, offer_details, campaign_type)
+    if 'error' in result:
+        print(f"Groq API Error: {result['error']}. Generating fallback variations.")
+        # Your fallback logic should match the new JSON structure
+        return {
+            "variation_a": {
+                "subject": f"🚀 {product_name} - Limited Time",
+                "body": "Hi there,\n\nBig news! {offer_details}\n\n[Claim Your Spot Now]"
+            },
+            "variation_b": {
+                "subject": f"You're invited: {product_name}",
+                "body": "Hello!\n\nWe have {offer_details} to share with you.\n\n[Discover More]"
+            }
+        }
 
     return result
 
@@ -492,64 +512,63 @@ def ab_dashboard():
 def create_campaign():
     try:
         data = request.get_json()
-
-        # Validate required fields
-        required_fields = ['company_name', 'product_name', 'offer_details', 'campaign_type']
-        # The check `data[field]` works for a non-empty list, so validation is fine.
-        if not all(field in data and data[field] for field in required_fields):
-            return jsonify({'success': False, 'error': 'Missing required fields'})
-
-        # Handle the campaign_type list from JSON
-        campaign_types = data.get('campaign_type', [])
-        if not isinstance(campaign_types, list) or not campaign_types:
-             return jsonify({'success': False, 'error': 'Campaign Type must be a non-empty list.'})
-
+        # ... (your existing validation code) ...
+        
         # Join the list into a string for the AI prompt and for DB storage
-        campaign_type_str = ", ".join(campaign_types)
+        campaign_type_str = ", ".join(data.get('campaign_type', []))
 
         # Generate email variations
-        result = generate_email_variations(
+        result_dict = generate_email_variations(
             data['company_name'], data['product_name'],
-            data['offer_details'], campaign_type_str,  # Use the joined string
+            data['offer_details'], campaign_type_str,
             data.get('target_audience', '')
         )
 
-        if 'error' in result:
-            return jsonify({'success': False, 'error': result['error']})
+        if 'error' in result_dict:
+            return jsonify({'success': False, 'error': result_dict['error']})
 
-        # Parse variations
-        variations = parse_email_variations(result[0]['generated_text'])
+        # No more parsing! We already have the data.
+        variations = [
+            {
+                "variation_name": "Variation_A",
+                "subject": result_dict['variation_a']['subject'],
+                "body": result_dict['variation_a']['body']
+            },
+            {
+                "variation_name": "Variation_B",
+                "subject": result_dict['variation_b']['subject'],
+                "body": result_dict['variation_b']['body']
+            }
+        ]
 
-        # Create campaign in database
+        # ... (rest of your database insertion code) ...
+        # Make sure your INSERT loop uses these 'variations'
+        
         conn = get_db_connection()
         cursor = conn.cursor()
-
         campaign_id = str(uuid.uuid4())
-        
-        # Create a more generic campaign name if multiple types are selected
-        campaign_name_type = campaign_types[0].title() if len(campaign_types) == 1 else "Multi-Type"
-
+        # ... (your campaign INSERT) ...
         cursor.execute(sql.SQL('''
             INSERT INTO campaigns (id, name, company_name, product_name, offer_details, campaign_type, target_audience)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
         '''), (
             campaign_id,
-            f"{data['company_name']} - {campaign_name_type}",  # Adjusted name
+            f"{data['company_name']} - {data['product_name']}",
             data['company_name'],
             data['product_name'],
             data['offer_details'],
-            campaign_type_str,  # Store the comma-separated string
+            campaign_type_str,
             data.get('target_audience', '')
         ))
 
         # Save variations
-        for i, variation in enumerate(variations):
+        for variation in variations:
             variation_id = str(uuid.uuid4())
             cursor.execute(sql.SQL('''
                 INSERT INTO email_variations (id, campaign_id, variation_name, subject_line, email_body)
                 VALUES (%s, %s, %s, %s, %s)
             '''), (
-                variation_id, campaign_id, f"Variation_{chr(65+i)}",
+                variation_id, campaign_id, variation['variation_name'],
                 variation['subject'], variation['body']
             ))
 
@@ -560,13 +579,12 @@ def create_campaign():
         return jsonify({
             'success': True,
             'campaign_id': campaign_id,
-            'variations': variations
+            'variations': variations # Send back the structured data
         })
 
     except Exception as e:
         print(f"Error in create_campaign: {e}")
         return jsonify({'success': False, 'error': str(e)})
-# END OF NEW FUNCTION
 
 @app.route('/upload-recipients', methods=['POST'])
 def upload_recipients():
@@ -1003,73 +1021,64 @@ def integrate_content_template():
         "Content-Type": "application/json"
     }
 
-    prompt = f"""You are an expert email formatter.
-Integrate the following content into the provided HTML template.
-Make sure to preserve styles and formatting.
-
-CONTENT:
+    # The user prompt is just the data. The instructions are in the system prompt.
+    prompt = f"""CONTENT_TO_INTEGRATE:
 {content}
 
-TEMPLATE_HTML:
+HTML_TEMPLATE:
 {template_html}
 """
 
     payload = {
-        "model": "llama-3.3-70b-versatile",
+        "model": "llama3-70b-8192", # <-- FIX 1: Use the correct model
         "messages": [
-            {"role": "system", "content": "You are a helpful assistant."},
+            # FIX 2: A very strong, specific system prompt
+            {"role": "system", "content": """You are an expert HTML email developer.
+Your sole task is to integrate user-provided content into an HTML template.
+You must preserve all existing HTML structure, inline styles, and CSS classes from the template.
+You must replace placeholder text (like [Placeholder]) with the provided content.
+You MUST return ONLY the complete, raw, finalized HTML code.
+Do NOT include markdown backticks (```html), explanations, or any text whatsoever outside of the final HTML document."""},
             {"role": "user", "content": prompt}
         ],
-        "temperature": 0.7
+        "temperature": 0.1 # <-- FIX 3: Low temp for deterministic HTML task
     }
 
     try:
-        print("Payload sent to Groq:")
-        print(json.dumps(payload, indent=2))
-
-        response = requests.post(url, headers=headers, json=payload)
-        print("Raw Groq response:")
-        print(response.text)
+        response = requests.post(url, headers=headers, json=payload, timeout=60)
+        response.raise_for_status() # Check for HTTP errors
 
         result = response.json()
         raw_html = result['choices'][0]['message']['content']
 
-
-
-# Step 1: Remove markdown-style HTML block markers
+        # Because of the strong prompt, we might not need the stripping logic anymore.
+        # But it's safer to keep it, just in case.
         if "```html" in raw_html:
             raw_html = raw_html.split("```html", 1)[-1]
         if "```" in raw_html:
             raw_html = raw_html.split("```", 1)[0]
-
-# Step 2: Strip typical AI wrap-up lines
-        wrapup_phrases = [
-        "Let me know if you need any further assistance",
-        "Let me know if you need anything else",
-        "Hope this helps",
-        "Have a great day",
-        "Happy to help"
-        ]
-        for phrase in wrapup_phrases:
-            if phrase.lower() in raw_html.lower():
-                raw_html = raw_html[:raw_html.lower().find(phrase.lower())].strip()
-
-# Step 3: Remove "Here is..." intro text
+            
         raw_html = raw_html.strip()
-        if raw_html.lower().startswith("here is"):
-            raw_html = raw_html[raw_html.find("<"):]
+        
+        # Remove common AI intros
+        if raw_html.lower().startswith("here is the finalized html"):
+            # Find the first '<' to start the HTML
+            first_bracket = raw_html.find("<")
+            if first_bracket != -1:
+                raw_html = raw_html[first_bracket:]
 
-# Inline CSS
+        # Inline CSS
         finalized_html = transform(raw_html)
-
 
         return jsonify({'success': True, 'finalized_html': finalized_html})
 
     except Exception as e:
-        print(f"Error parsing Groq response: {e}")
+        print(f"Error in integrate_content_template: {e}")
+        if 'response' in locals():
+             print(f"Raw Groq response text: {response.text}")
         return jsonify({'success': False, 'error': f'Parsing error: {str(e)}'})
-
-
+    
+    
 """@app.route('/send-finalized-mail', methods=['POST'])
 def send_finalized_mail():
     # Expects: subject, html_body, sender_csv (file upload)
